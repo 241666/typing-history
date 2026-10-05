@@ -11,273 +11,1056 @@
       box-sizing: border-box;
     }
 
-    body {
-      margin: 0;
-      font-family: Arial, "Noto Sans TC", sans-serif;
-      background: #0a0a0f;
-      color: #f4d7e7;
-      text-align: center;
+    :root {
+      --bg: #030914;
+      --bg2: #061426;
+      --panel: #081a2d;
+      --panel2: #0b2238;
+
+      --blue: #7898b5;
+      --blue-light: #a9c0d2;
+      --border: #28435c;
+
+      --text: #dce7f0;
+      --muted: #71869a;
+
+      --success: #9bb7c9;
     }
 
-    .container {
-      width: min(1000px, 92%);
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      font-family: Arial, "Noto Sans TC", sans-serif;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 20% 15%,
+          rgba(35, 80, 115, 0.20),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 80% 80%,
+          rgba(30, 65, 100, 0.18),
+          transparent 30%
+        ),
+        linear-gradient(
+          145deg,
+          #020711 0%,
+          #061425 48%,
+          #030914 100%
+        );
+
+      overflow-x: hidden;
+    }
+
+    /* 星空 */
+    body::before {
+      content: "";
+
+      position: fixed;
+      inset: 0;
+
+      pointer-events: none;
+
+      opacity: 0.35;
+
+      background-image:
+        radial-gradient(
+          circle,
+          rgba(190, 210, 225, 0.55) 1px,
+          transparent 1px
+        ),
+        radial-gradient(
+          circle,
+          rgba(120, 155, 180, 0.35) 1px,
+          transparent 1px
+        );
+
+      background-size:
+        100px 100px,
+        160px 160px;
+
+      background-position:
+        20px 30px,
+        70px 90px;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+
+      width: min(1150px, 94%);
+
       margin: 0 auto;
-      padding: 35px 0;
+
+      padding: 36px 0 50px;
+    }
+
+    /* =========================
+       Header
+    ========================= */
+
+    header {
+      text-align: center;
+
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      color: #61778b;
+
+      font-size: 11px;
+
+      letter-spacing: 4px;
+
+      margin-bottom: 12px;
     }
 
     h1 {
-      margin-bottom: 8px;
+      margin: 0;
+
+      font-size: clamp(34px, 5vw, 56px);
+
+      letter-spacing: 5px;
+
+      color: #dce7f0;
+
+      text-shadow:
+        0 0 15px rgba(130, 165, 190, 0.16);
     }
 
-    .description {
-      color: #aaa;
-      margin-bottom: 25px;
+    .subtitle {
+      margin: 12px 0 0;
+
+      color: #71869a;
+
+      font-size: 14px;
+
+      letter-spacing: 1px;
     }
 
-    .info {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-      font-size: 18px;
+    /* =========================
+       Status
+    ========================= */
+
+    .status-bar {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 14px;
+
+      margin-bottom: 18px;
     }
 
-    .game-area {
-      position: relative;
-      width: 100%;
-      height: 500px;
-      background: #10101a;
-      border: 2px solid #292434;
+    .status {
+      background:
+        linear-gradient(
+          145deg,
+          rgba(10, 31, 50, 0.94),
+          rgba(5, 18, 32, 0.94)
+        );
+
+      border: 1px solid rgba(90, 125, 150, 0.35);
+
       border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 20px;
+
+      padding: 16px 20px;
+
+      text-align: center;
+
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.18);
     }
 
-    .letter {
-      position: absolute;
-      top: -60px;
-      width: 50px;
-      height: 50px;
+    .status-label {
+      color: #657b90;
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 11px;
 
-      font-size: 28px;
+      letter-spacing: 3px;
+
+      margin-bottom: 6px;
+    }
+
+    .status-value {
+      font-size: 25px;
+
       font-weight: bold;
 
-      background: #9f8cff;
-      color: white;
-
-      border-radius: 10px;
-      user-select: none;
+      color: #d8e4ed;
     }
 
-    .controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
+    /* =========================
+       Layout
+    ========================= */
+
+    .game-layout {
+      display: grid;
+
+      grid-template-columns: 250px 1fr;
+
+      gap: 18px;
+
+      align-items: stretch;
     }
 
-    button {
-      padding: 11px 24px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background: #9f8cff;
-      color: white;
-    }
-
-    button:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
+    /* =========================
+       Settings
+    ========================= */
 
     .settings {
-      margin: 20px auto;
-      padding: 18px;
-      max-width: 600px;
-      border: 1px solid #292434;
-      border-radius: 10px;
-      background: #10101a;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(8, 28, 47, 0.96),
+          rgba(5, 19, 33, 0.96)
+        );
+
+      border: 1px solid rgba(75, 112, 138, 0.38);
+
+      border-radius: 14px;
+
+      padding: 22px;
+
+      box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.22);
     }
 
-    .settings label {
-      display: block;
-      margin: 12px 0;
+    .settings h2 {
+      margin: 0 0 22px;
+
+      font-size: 17px;
+
+      font-weight: 600;
+
+      color: #cbd9e4;
+    }
+
+    .setting-group {
+      margin-bottom: 24px;
+    }
+
+    .setting-title {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 10px;
+
+      color: #8195a7;
+
+      font-size: 13px;
+    }
+
+    .speed-value {
+      color: #b4c6d4;
+
+      font-weight: bold;
     }
 
     input[type="range"] {
-      width: 220px;
-      vertical-align: middle;
+      width: 100%;
+
+      accent-color: #6f8da5;
+
+      cursor: pointer;
     }
+
+    .range-note {
+      display: flex;
+
+      justify-content: space-between;
+
+      margin-top: 5px;
+
+      color: #52697c;
+
+      font-size: 11px;
+    }
+
+    .checkbox-row {
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      color: #8ea2b3;
+
+      font-size: 13px;
+
+      cursor: pointer;
+    }
+
+    .checkbox-row input {
+      width: 17px;
+
+      height: 17px;
+
+      accent-color: #6f8da5;
+
+      cursor: pointer;
+    }
+
+    .mission {
+      margin-top: 28px;
+
+      padding-top: 20px;
+
+      border-top: 1px solid #1b3044;
+    }
+
+    .mission-label {
+      color: #52697c;
+
+      font-size: 10px;
+
+      letter-spacing: 3px;
+
+      margin-bottom: 8px;
+    }
+
+    .mission-text {
+      color: #788da0;
+
+      font-size: 13px;
+
+      line-height: 1.8;
+    }
+
+    /* =========================
+       Game Panel
+    ========================= */
+
+    .game-panel {
+      position: relative;
+
+      min-height: 580px;
+
+      background:
+        radial-gradient(
+          circle at 50% 100%,
+          rgba(45, 85, 120, 0.16),
+          transparent 42%
+        ),
+        #040b15;
+
+      border: 1px solid #2a435c;
+
+      border-radius: 16px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.35),
+        inset 0 0 80px rgba(70, 100, 130, 0.04);
+    }
+
+    .game-panel::before {
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      pointer-events: none;
+
+      opacity: 0.18;
+
+      background-image:
+        linear-gradient(
+          rgba(120, 150, 175, 0.07) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(120, 150, 175, 0.07) 1px,
+          transparent 1px
+        );
+
+      background-size: 50px 50px;
+    }
+
+    .game-header {
+      position: relative;
+
+      z-index: 2;
+
+      padding: 18px 22px;
+
+      border-bottom: 1px solid #172b3e;
+
+      background: rgba(4, 11, 21, 0.82);
+
+      color: #61788c;
+
+      font-size: 11px;
+
+      letter-spacing: 3px;
+    }
+
+    #gameArea {
+      position: relative;
+
+      height: 440px;
+
+      overflow: hidden;
+    }
+
+    /* =========================
+       流星字母
+    ========================= */
+
+    .letter {
+      position: absolute;
+
+      top: -60px;
+
+      width: 52px;
+      height: 52px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle at 35% 30%,
+          #ffffff 0%,
+          #c8d7e2 8%,
+          #829db2 30%,
+          #38536b 65%,
+          #142638 100%
+        );
+
+      border: 1px solid rgba(190, 215, 230, 0.75);
+
+      color: #f3f7fa;
+
+      font-size: 21px;
+
+      font-weight: bold;
+
+      box-shadow:
+        0 0 8px rgba(180, 210, 225, 0.38),
+        0 0 22px rgba(100, 145, 175, 0.20);
+
+      user-select: none;
+
+      pointer-events: none;
+
+      z-index: 4;
+    }
+
+    /* 流星尾巴 */
+    .letter::before {
+      content: "";
+
+      position: absolute;
+
+      width: 7px;
+
+      height: 90px;
+
+      left: 50%;
+
+      top: 34px;
+
+      transform: translateX(-50%);
+
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(190, 215, 230, 0.42),
+          rgba(110, 150, 180, 0.20),
+          transparent
+        );
+
+      filter: blur(2px);
+
+      z-index: -1;
+    }
+
+    /* 流星淡淡的外圍光 */
+    .letter::after {
+      content: "";
+
+      position: absolute;
+
+      width: 60px;
+
+      height: 105px;
+
+      left: 50%;
+
+      top: 28px;
+
+      transform: translateX(-50%);
+
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(130, 165, 190, 0.10),
+          transparent
+        );
+
+      filter: blur(9px);
+
+      z-index: -2;
+    }
+
+    .letter.correct {
+      opacity: 0;
+
+      transform: scale(1.45);
+
+      filter: brightness(1.35);
+
+      transition: 0.15s;
+    }
+
+    /* =========================
+       Start Screen
+    ========================= */
+
+    .start-screen {
+      position: absolute;
+
+      inset: 0;
+
+      z-index: 5;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      background:
+        rgba(3, 8, 16, 0.78);
+
+      backdrop-filter: blur(3px);
+    }
+
+    .start-screen.hidden {
+      display: none;
+    }
+
+    .start-title {
+      color: #cbd9e4;
+
+      font-size: 25px;
+
+      margin-bottom: 8px;
+
+      letter-spacing: 3px;
+    }
+
+    .start-text {
+      color: #6f8497;
+
+      font-size: 13px;
+
+      margin-bottom: 25px;
+    }
+
+    /* =========================
+       Buttons
+    ========================= */
+
+    button {
+      border: 1px solid #49657d;
+
+      background:
+        linear-gradient(
+          145deg,
+          #142c42,
+          #0b1c2d
+        );
+
+      color: #dbe6ee;
+
+      padding: 12px 28px;
+
+      border-radius: 8px;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+      transition:
+        background 0.2s,
+        border-color 0.2s,
+        transform 0.2s;
+    }
+
+    button:hover {
+      background:
+        linear-gradient(
+          145deg,
+          #1b3a55,
+          #10263a
+        );
+
+      border-color: #718da4;
+
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .main-button {
+      min-width: 150px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #1c3b55,
+          #10283c
+        );
+
+      border-color: #67839a;
+    }
+
+    .pause-button {
+      margin-top: 16px;
+
+      background: transparent;
+
+      border-color: #30485d;
+
+      color: #8094a5;
+    }
+
+    .pause-button:hover {
+      background: #0b1827;
+    }
+
+    .game-footer {
+      position: relative;
+
+      z-index: 3;
+
+      display: flex;
+
+      justify-content: center;
+
+      gap: 12px;
+
+      padding: 18px;
+
+      border-top: 1px solid #172b3e;
+
+      background: rgba(4, 11, 21, 0.82);
+    }
+
+    /* =========================
+       Result
+    ========================= */
+
+    .result {
+      position: absolute;
+
+      inset: 0;
+
+      z-index: 10;
+
+      display: none;
+
+      align-items: center;
+
+      justify-content: center;
+
+      flex-direction: column;
+
+      background:
+        rgba(3, 8, 16, 0.95);
+
+      backdrop-filter: blur(5px);
+    }
+
+    .result.show {
+      display: flex;
+    }
+
+    .result h2 {
+      margin: 0 0 12px;
+
+      font-size: 28px;
+
+      letter-spacing: 2px;
+
+      color: #d8e4ed;
+    }
+
+    .result p {
+      margin: 5px 0;
+
+      color: #7d91a3;
+    }
+
+    .result strong {
+      color: #c2d1dd;
+    }
+
+    /* =========================
+       Back
+    ========================= */
 
     .back {
       display: inline-block;
-      margin-top: 20px;
-      color: #9f8cff;
+
+      margin-top: 25px;
+
+      color: #71869a;
+
       text-decoration: none;
+
+      font-size: 13px;
+
+      border-bottom: 1px solid transparent;
+
+      transition: 0.2s;
     }
 
-    #message {
-      min-height: 28px;
-      margin: 15px 0;
-      color: #aaa;
+    .back:hover {
+      color: #a7bac9;
+
+      border-bottom-color: #536c80;
+    }
+
+    /* =========================
+       RWD
+    ========================= */
+
+    @media (max-width: 850px) {
+
+      .game-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .settings {
+        order: 2;
+      }
+
+      .status-bar {
+        grid-template-columns: 1fr;
+      }
+
+      #gameArea {
+        height: 420px;
+      }
+    }
+
+    @media (max-width: 520px) {
+
+      .page {
+        width: 94%;
+
+        padding-top: 25px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .game-panel {
+        min-height: 520px;
+      }
+
+      #gameArea {
+        height: 360px;
+      }
+
+      .letter {
+        width: 48px;
+        height: 48px;
+
+        font-size: 19px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+  <div class="page">
 
-    <h1>英打遊戲 Version 4</h1>
+    <header>
 
-    <p class="description">
-      十鍵落下英打遊戲
-    </p>
-
-    <div class="info">
-      <div>
-        題目：
-        <span id="question">0</span> / 10
+      <div class="eyebrow">
+        SPACE TYPING PROJECT / V4
       </div>
 
-      <div>
-        分數：
-        <span id="score">0</span>
+      <h1>英打遊戲</h1>
+
+      <p class="subtitle">
+        在寂靜的宇宙中，完成你的輸入任務。
+      </p>
+
+    </header>
+
+    <section class="status-bar">
+
+      <div class="status">
+
+        <div class="status-label">
+          QUESTION
+        </div>
+
+        <div class="status-value">
+          <span id="question">0</span> / 10
+        </div>
+
       </div>
 
-      <div>
-        Miss：
-        <span id="miss">0</span>
-      </div>
-    </div>
+      <div class="status">
 
-    <div class="game-area" id="gameArea"></div>
+        <div class="status-label">
+          SCORE
+        </div>
 
-    <div id="message">
-      按下「開始遊戲」開始挑戰！
-    </div>
-
-    <div class="controls">
-
-      <button id="startButton">
-        開始遊戲
-      </button>
-
-      <button id="pauseButton" disabled>
-        暫停
-      </button>
-
-    </div>
-
-    <div class="settings">
-
-      <label>
-        落下時間：
-
-        <input
-          type="range"
-          id="speedSlider"
-          min="3"
-          max="14"
-          value="8"
+        <div
+          class="status-value"
+          id="score"
         >
+          0
+        </div>
 
-        <span id="speedValue">8</span> 秒
-      </label>
+      </div>
 
-      <label>
-        <input
-          type="checkbox"
-          id="acceleration"
+      <div class="status">
+
+        <div class="status-label">
+          MISS
+        </div>
+
+        <div
+          class="status-value"
+          id="miss"
         >
+          0
+        </div>
 
-        啟用加速
-      </label>
+      </div>
+
+    </section>
+
+    <main class="game-layout">
+
+      <aside class="settings">
+
+        <h2>遊戲設定</h2>
+
+        <div class="setting-group">
+
+          <div class="setting-title">
+
+            <span>落下時間</span>
+
+            <span class="speed-value">
+              <span id="speedValue">8</span> 秒
+            </span>
+
+          </div>
+
+          <input
+            type="range"
+            id="speedSlider"
+            min="3"
+            max="14"
+            value="8"
+          >
+
+          <div class="range-note">
+
+            <span>快速</span>
+
+            <span>慢速</span>
+
+          </div>
+
+        </div>
+
+        <div class="setting-group">
+
+          <label class="checkbox-row">
+
+            <input
+              type="checkbox"
+              id="acceleration"
+            >
+
+            <span>啟用落下加速</span>
+
+          </label>
+
+        </div>
+
+        <div class="mission">
+
+          <div class="mission-label">
+            MISSION
+          </div>
+
+          <div class="mission-text">
+
+            使用 A S D F G H J K L ;<br>
+
+            完成 10 個字母輸入。<br><br>
+
+            正確輸入：得分<br>
+
+            錯誤輸入：字母保留<br>
+
+            落到底部：Miss
+
+          </div>
+
+        </div>
+
+      </aside>
+
+      <section class="game-panel">
+
+        <div class="game-header">
+          TYPING SPACE / ACTIVE
+        </div>
+
+        <div id="gameArea">
+
+          <div
+            class="start-screen"
+            id="startScreen"
+          >
+
+            <div class="start-title">
+              SPACE TYPING
+            </div>
+
+            <div class="start-text">
+              準備開始你的英打任務
+            </div>
+
+            <button
+              class="main-button"
+              id="startBtn"
+            >
+              開始遊戲
+            </button>
+
+          </div>
+
+          <div
+            class="result"
+            id="result"
+          >
+
+            <h2>
+              MISSION COMPLETE
+            </h2>
+
+            <p>
+              最終分數：
+              <strong id="finalScore">0</strong>
+            </p>
+
+            <p>
+              Miss：
+              <strong id="finalMiss">0</strong>
+            </p>
+
+            <button id="restartBtn">
+              再玩一次
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="game-footer">
+
+          <button
+            class="pause-button"
+            id="pauseBtn"
+          >
+            暫停
+          </button>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <div style="text-align:center;">
+
+      <a
+        class="back"
+        href="../index.html"
+      >
+        ← 返回版本歷史首頁
+      </a>
 
     </div>
-
-    <a class="back" href="../index.html">
-      ← 回到版本歷史首頁
-    </a>
 
   </div>
 
-
   <script>
 
-    // =========================
-    // 遊戲設定
-    // =========================
-
     const letters = [
-      "A",
-      "S",
-      "D",
-      "F",
-      "G",
-      "H",
-      "J",
-      "K",
-      "L",
-      ";"
+      "A", "S", "D", "F", "G",
+      "H", "J", "K", "L", ";"
     ];
-
-    const totalQuestions = 10;
-
-
-    // =========================
-    // 遊戲狀態
-    // =========================
-
-    let currentQuestion = 0;
-    let score = 0;
-    let miss = 0;
-
-    let currentLetter = null;
-    let currentElement = null;
-
-    let gameRunning = false;
-    let paused = false;
-
-    let animationFrame = null;
-
-    let startTime = 0;
-    let pausedElapsed = 0;
-    let fallDuration = 8000;
-
-
-    // =========================
-    // 找到 HTML 元素
-    // =========================
 
     const gameArea =
       document.getElementById("gameArea");
 
-    const questionElement =
-      document.getElementById("question");
+    const startScreen =
+      document.getElementById("startScreen");
 
-    const scoreElement =
+    const startBtn =
+      document.getElementById("startBtn");
+
+    const pauseBtn =
+      document.getElementById("pauseBtn");
+
+    const result =
+      document.getElementById("result");
+
+    const restartBtn =
+      document.getElementById("restartBtn");
+
+    const scoreEl =
       document.getElementById("score");
 
-    const missElement =
+    const missEl =
       document.getElementById("miss");
 
-    const messageElement =
-      document.getElementById("message");
+    const questionEl =
+      document.getElementById("question");
 
-    const startButton =
-      document.getElementById("startButton");
+    const finalScore =
+      document.getElementById("finalScore");
 
-    const pauseButton =
-      document.getElementById("pauseButton");
+    const finalMiss =
+      document.getElementById("finalMiss");
 
     const speedSlider =
       document.getElementById("speedSlider");
@@ -285,485 +1068,386 @@
     const speedValue =
       document.getElementById("speedValue");
 
-    const acceleration =
+    const accelerationCheckbox =
       document.getElementById("acceleration");
 
+    let score = 0;
+    let miss = 0;
+    let question = 0;
 
-    // =========================
-    // 秒數滑桿
-    // =========================
+    let gameRunning = false;
+    let paused = false;
+
+    let currentLetter = null;
+    let animationFrame = null;
+
+    let startTime = 0;
+
+    let duration = 8000;
 
     speedSlider.addEventListener(
       "input",
-      function () {
+      () => {
 
         speedValue.textContent =
           speedSlider.value;
 
+        duration =
+          Number(speedSlider.value) * 1000;
+
       }
     );
 
-
-    // =========================
-    // 開始遊戲
-    // =========================
-
-    startButton.addEventListener(
+    startBtn.addEventListener(
       "click",
       startGame
     );
 
-
-    // =========================
-    // 暫停按鈕
-    // =========================
-
-    pauseButton.addEventListener(
+    restartBtn.addEventListener(
       "click",
-      function () {
-
-        if (!gameRunning) {
-          return;
-        }
-
-        if (paused) {
-          resumeGame();
-        } else {
-          pauseGame();
-        }
-
-      }
+      startGame
     );
-
-
-    // =========================
-    // 開始遊戲
-    // =========================
 
     function startGame() {
 
-      cancelAnimationFrame(animationFrame);
-
-      gameArea.innerHTML = "";
-
-      currentQuestion = 0;
       score = 0;
+
       miss = 0;
 
-      currentLetter = null;
-      currentElement = null;
+      question = 0;
 
-      paused = false;
+      scoreEl.textContent = score;
+
+      missEl.textContent = miss;
+
+      questionEl.textContent = question;
+
+      result.classList.remove("show");
+
+      startScreen.classList.add("hidden");
+
+      clearLetter();
+
       gameRunning = true;
 
-      updateDisplay();
+      paused = false;
 
-      startButton.disabled = true;
-      pauseButton.disabled = false;
-
-      pauseButton.textContent = "暫停";
-
-      messageElement.textContent =
-        "遊戲開始！";
+      pauseBtn.textContent = "暫停";
 
       nextQuestion();
-
     }
-
-
-    // =========================
-    // 下一題
-    // =========================
 
     function nextQuestion() {
 
-      if (!gameRunning) {
-        return;
-      }
+      if (!gameRunning) return;
 
-      if (currentQuestion >= totalQuestions) {
+      if (question >= 10) {
 
         endGame();
 
         return;
       }
 
-      currentQuestion++;
+      question++;
 
-      questionElement.textContent =
-        currentQuestion;
+      questionEl.textContent =
+        question;
 
       createLetter();
-
     }
-
-
-    // =========================
-    // 建立掉落字母
-    // =========================
 
     function createLetter() {
 
-      cancelAnimationFrame(animationFrame);
+      clearLetter();
 
-      if (currentElement) {
-        currentElement.remove();
-      }
-
-      const randomIndex =
-        Math.floor(
-          Math.random() * letters.length
-        );
-
-      currentLetter =
-        letters[randomIndex];
+      const letter =
+        letters[
+          Math.floor(
+            Math.random() * letters.length
+          )
+        ];
 
       const element =
         document.createElement("div");
 
       element.className = "letter";
 
-      element.textContent =
-        currentLetter;
+      element.textContent = letter;
 
-      const maxLeft =
+      const areaWidth =
+        gameArea.clientWidth;
+
+      const maxX =
         Math.max(
-          0,
-          gameArea.clientWidth - 60
+          10,
+          areaWidth - 70
         );
 
-      const randomLeft =
-        Math.floor(
-          Math.random() * (maxLeft + 1)
-        );
+      const x =
+        Math.random() * maxX;
 
       element.style.left =
-        randomLeft + "px";
+        x + "px";
 
       element.style.top =
         "-60px";
 
       gameArea.appendChild(element);
 
-      currentElement = element;
-
-      fallDuration =
-        Number(speedSlider.value) * 1000;
+      currentLetter = {
+        element: element,
+        value: letter
+      };
 
       startTime =
         performance.now();
 
-      pausedElapsed = 0;
-
-      animateLetter();
-
+      animationFrame =
+        requestAnimationFrame(
+          updateLetter
+        );
     }
 
+    function updateLetter(now) {
 
-    // =========================
-    // 字母掉落動畫
-    // =========================
-
-    function animateLetter() {
-
-      if (!gameRunning) {
-        return;
-      }
+      if (!gameRunning) return;
 
       if (paused) {
+
+        animationFrame =
+          requestAnimationFrame(
+            updateLetter
+          );
+
         return;
       }
 
-      const now =
-        performance.now();
+      if (!currentLetter) return;
 
       const elapsed =
         now - startTime;
 
       let progress =
-        elapsed / fallDuration;
+        elapsed / duration;
 
+      if (
+        accelerationCheckbox.checked
+      ) {
 
-      // =========================
-      // 加速模式
-      // =========================
-
-      if (acceleration.checked) {
-
-        // 讓後半段速度逐漸加快
         progress =
-          Math.pow(progress, 0.7);
+          Math.pow(
+            progress,
+            0.7
+          );
 
       }
 
-
-      progress =
-        Math.min(1, progress);
-
-
-      const startY = -60;
-
-      const endY =
+      const areaHeight =
         gameArea.clientHeight;
 
-      const currentY =
-        startY +
-        (endY - startY) * progress;
+      const letterHeight = 54;
 
+      const maxY =
+        areaHeight - letterHeight;
 
-      if (currentElement) {
+      const y =
+        progress * maxY;
 
-        currentElement.style.top =
-          currentY + "px";
+      currentLetter.element.style.top =
+        y + "px";
 
-      }
+      /* 流星輕微漂移 */
 
+      const drift =
+        Math.sin(
+          progress * Math.PI * 3
+        ) * 5;
 
-      // =========================
-      // 掉到底部
-      // =========================
+      currentLetter.element.style.transform =
+        `translateX(${drift}px)`;
 
       if (progress >= 1) {
 
         miss++;
 
-        updateDisplay();
+        missEl.textContent =
+          miss;
 
-        messageElement.textContent =
-          "Miss！字母掉到底部了。";
-
-        currentLetter = null;
-
-        if (currentElement) {
-          currentElement.remove();
-          currentElement = null;
-        }
+        clearLetter();
 
         nextQuestion();
 
         return;
       }
 
-
       animationFrame =
         requestAnimationFrame(
-          animateLetter
+          updateLetter
         );
-
     }
-
-
-    // =========================
-    // 鍵盤輸入
-    // =========================
 
     document.addEventListener(
       "keydown",
-      function (event) {
+      (event) => {
 
-        if (!gameRunning) {
-          return;
-        }
+        if (!gameRunning) return;
 
-        if (paused) {
-          return;
-        }
+        if (event.repeat) return;
 
-        // 防止長按造成連續判定
-        if (event.repeat) {
-          return;
-        }
+        if (paused) return;
 
-        const key =
+        if (!currentLetter) return;
+
+        const pressed =
           event.key.toUpperCase();
 
-
-        // 不是十個指定按鍵
-        if (!letters.includes(key)) {
-          return;
-        }
-
-
-        // 目前沒有字母
-        if (!currentLetter) {
-          return;
-        }
-
-
-        // =========================
-        // 答對
-        // =========================
-
-        if (key === currentLetter) {
+        if (
+          pressed ===
+          currentLetter.value
+        ) {
 
           score++;
 
-          updateDisplay();
+          scoreEl.textContent =
+            score;
 
-          messageElement.textContent =
-            "答對！";
-
-          cancelAnimationFrame(
-            animationFrame
+          currentLetter.element.classList.add(
+            "correct"
           );
 
-          if (currentElement) {
-            currentElement.remove();
-            currentElement = null;
-          }
+          setTimeout(
+            () => {
 
-          currentLetter = null;
+              if (currentLetter) {
 
-          nextQuestion();
+                clearLetter();
 
+                nextQuestion();
+
+              }
+
+            },
+            100
+          );
         }
 
+      }
+    );
 
-        // =========================
-        // 答錯
-        // =========================
+    pauseBtn.addEventListener(
+      "click",
+      () => {
 
-        else {
+        if (!gameRunning) return;
 
-          messageElement.textContent =
-            "答錯了，再試試看！";
+        paused = !paused;
+
+        if (paused) {
+
+          pauseBtn.textContent =
+            "繼續";
+
+        } else {
+
+          pauseBtn.textContent =
+            "暫停";
+
+          if (currentLetter) {
+
+            const currentTop =
+              parseFloat(
+                currentLetter
+                  .element
+                  .style
+                  .top
+              );
+
+            const areaHeight =
+              gameArea.clientHeight;
+
+            const letterHeight = 54;
+
+            const maxY =
+              areaHeight -
+              letterHeight;
+
+            const progress =
+              currentTop /
+              maxY;
+
+            startTime =
+              performance.now()
+              -
+              progress *
+              duration;
+
+          }
 
         }
 
       }
     );
 
+    document.addEventListener(
+      "visibilitychange",
+      () => {
 
-    // =========================
-    // 暫停
-    // =========================
+        if (!gameRunning) return;
 
-    function pauseGame() {
+        if (document.hidden) {
 
-      if (!gameRunning || paused) {
-        return;
+          if (!paused) {
+
+            paused = true;
+
+            pauseBtn.textContent =
+              "繼續";
+
+          }
+
+        }
+
+      }
+    );
+
+    function clearLetter() {
+
+      if (animationFrame) {
+
+        cancelAnimationFrame(
+          animationFrame
+        );
+
+        animationFrame = null;
       }
 
-      paused = true;
+      if (currentLetter) {
 
-      pausedElapsed =
-        performance.now() - startTime;
+        currentLetter.element.remove();
 
-      cancelAnimationFrame(
-        animationFrame
-      );
-
-      pauseButton.textContent =
-        "繼續";
-
-      messageElement.textContent =
-        "遊戲已暫停";
-
-    }
-
-
-    // =========================
-    // 繼續
-    // =========================
-
-    function resumeGame() {
-
-      if (!gameRunning || !paused) {
-        return;
+        currentLetter = null;
       }
-
-      paused = false;
-
-      startTime =
-        performance.now() -
-        pausedElapsed;
-
-      pauseButton.textContent =
-        "暫停";
-
-      messageElement.textContent =
-        "繼續遊戲！";
-
-      animateLetter();
-
     }
-
-
-    // =========================
-    // 更新畫面數字
-    // =========================
-
-    function updateDisplay() {
-
-      questionElement.textContent =
-        currentQuestion;
-
-      scoreElement.textContent =
-        score;
-
-      missElement.textContent =
-        miss;
-
-    }
-
-
-    // =========================
-    // 遊戲結束
-    // =========================
 
     function endGame() {
 
       gameRunning = false;
+
       paused = false;
 
-      cancelAnimationFrame(
-        animationFrame
-      );
+      clearLetter();
 
-      currentLetter = null;
+      finalScore.textContent =
+        score;
 
-      if (currentElement) {
-        currentElement.remove();
-        currentElement = null;
-      }
+      finalMiss.textContent =
+        miss;
 
-      startButton.disabled = false;
-      pauseButton.disabled = true;
+      result.classList.add("show");
 
-      pauseButton.textContent =
+      pauseBtn.textContent =
         "暫停";
-
-      messageElement.textContent =
-        "遊戲結束！你的分數是 " +
-        score +
-        " 分，Miss " +
-        miss +
-        " 次。";
-
     }
-
-
-    // =========================
-    // 瀏覽器分頁離開
-    // 自動暫停
-    // =========================
-
-    document.addEventListener(
-      "visibilitychange",
-      function () {
-
-        if (
-          document.hidden &&
-          gameRunning &&
-          !paused
-        ) {
-
-          pauseGame();
-
-        }
-
-      }
-    );
 
   </script>
 
