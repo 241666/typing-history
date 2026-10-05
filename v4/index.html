@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>英打遊戲 Version 4</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans TC", sans-serif;
+      background: #0a0a0f;
+      color: #f4d7e7;
+      text-align: center;
+    }
+
+    .container {
+      width: min(1000px, 92%);
+      margin: 0 auto;
+      padding: 35px 0;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    .description {
+      color: #aaa;
+      margin-bottom: 25px;
+    }
+
+    .info {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    .game-area {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      background: #10101a;
+      border: 2px solid #292434;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .letter {
+      position: absolute;
+      top: -60px;
+      width: 50px;
+      height: 50px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 28px;
+      font-weight: bold;
+
+      background: #9f8cff;
+      color: white;
+
+      border-radius: 10px;
+      user-select: none;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 11px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #9f8cff;
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .settings {
+      margin: 20px auto;
+      padding: 18px;
+      max-width: 600px;
+      border: 1px solid #292434;
+      border-radius: 10px;
+      background: #10101a;
+    }
+
+    .settings label {
+      display: block;
+      margin: 12px 0;
+    }
+
+    input[type="range"] {
+      width: 220px;
+      vertical-align: middle;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 20px;
+      color: #9f8cff;
+      text-decoration: none;
+    }
+
+    #message {
+      min-height: 28px;
+      margin: 15px 0;
+      color: #aaa;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>英打遊戲 Version 4</h1>
+
+    <p class="description">
+      十鍵落下英打遊戲
+    </p>
+
+    <div class="info">
+      <div>
+        題目：
+        <span id="question">0</span> / 10
+      </div>
+
+      <div>
+        分數：
+        <span id="score">0</span>
+      </div>
+
+      <div>
+        Miss：
+        <span id="miss">0</span>
+      </div>
+    </div>
+
+    <div class="game-area" id="gameArea"></div>
+
+    <div id="message">
+      按下「開始遊戲」開始挑戰！
+    </div>
+
+    <div class="controls">
+
+      <button id="startButton">
+        開始遊戲
+      </button>
+
+      <button id="pauseButton" disabled>
+        暫停
+      </button>
+
+    </div>
+
+    <div class="settings">
+
+      <label>
+        落下時間：
+
+        <input
+          type="range"
+          id="speedSlider"
+          min="3"
+          max="14"
+          value="8"
+        >
+
+        <span id="speedValue">8</span> 秒
+      </label>
+
+      <label>
+        <input
+          type="checkbox"
+          id="acceleration"
+        >
+
+        啟用加速
+      </label>
+
+    </div>
+
+    <a class="back" href="../index.html">
+      ← 回到版本歷史首頁
+    </a>
+
+  </div>
+
+
+  <script>
+
+    // =========================
+    // 遊戲設定
+    // =========================
+
+    const letters = [
+      "A",
+      "S",
+      "D",
+      "F",
+      "G",
+      "H",
+      "J",
+      "K",
+      "L",
+      ";"
+    ];
+
+    const totalQuestions = 10;
+
+
+    // =========================
+    // 遊戲狀態
+    // =========================
+
+    let currentQuestion = 0;
+    let score = 0;
+    let miss = 0;
+
+    let currentLetter = null;
+    let currentElement = null;
+
+    let gameRunning = false;
+    let paused = false;
+
+    let animationFrame = null;
+
+    let startTime = 0;
+    let pausedElapsed = 0;
+    let fallDuration = 8000;
+
+
+    // =========================
+    // 找到 HTML 元素
+    // =========================
+
+    const gameArea =
+      document.getElementById("gameArea");
+
+    const questionElement =
+      document.getElementById("question");
+
+    const scoreElement =
+      document.getElementById("score");
+
+    const missElement =
+      document.getElementById("miss");
+
+    const messageElement =
+      document.getElementById("message");
+
+    const startButton =
+      document.getElementById("startButton");
+
+    const pauseButton =
+      document.getElementById("pauseButton");
+
+    const speedSlider =
+      document.getElementById("speedSlider");
+
+    const speedValue =
+      document.getElementById("speedValue");
+
+    const acceleration =
+      document.getElementById("acceleration");
+
+
+    // =========================
+    // 秒數滑桿
+    // =========================
+
+    speedSlider.addEventListener(
+      "input",
+      function () {
+
+        speedValue.textContent =
+          speedSlider.value;
+
+      }
+    );
+
+
+    // =========================
+    // 開始遊戲
+    // =========================
+
+    startButton.addEventListener(
+      "click",
+      startGame
+    );
+
+
+    // =========================
+    // 暫停按鈕
+    // =========================
+
+    pauseButton.addEventListener(
+      "click",
+      function () {
+
+        if (!gameRunning) {
+          return;
+        }
+
+        if (paused) {
+          resumeGame();
+        } else {
+          pauseGame();
+        }
+
+      }
+    );
+
+
+    // =========================
+    // 開始遊戲
+    // =========================
+
+    function startGame() {
+
+      cancelAnimationFrame(animationFrame);
+
+      gameArea.innerHTML = "";
+
+      currentQuestion = 0;
+      score = 0;
+      miss = 0;
+
+      currentLetter = null;
+      currentElement = null;
+
+      paused = false;
+      gameRunning = true;
+
+      updateDisplay();
+
+      startButton.disabled = true;
+      pauseButton.disabled = false;
+
+      pauseButton.textContent = "暫停";
+
+      messageElement.textContent =
+        "遊戲開始！";
+
+      nextQuestion();
+
+    }
+
+
+    // =========================
+    // 下一題
+    // =========================
+
+    function nextQuestion() {
+
+      if (!gameRunning) {
+        return;
+      }
+
+      if (currentQuestion >= totalQuestions) {
+
+        endGame();
+
+        return;
+      }
+
+      currentQuestion++;
+
+      questionElement.textContent =
+        currentQuestion;
+
+      createLetter();
+
+    }
+
+
+    // =========================
+    // 建立掉落字母
+    // =========================
+
+    function createLetter() {
+
+      cancelAnimationFrame(animationFrame);
+
+      if (currentElement) {
+        currentElement.remove();
+      }
+
+      const randomIndex =
+        Math.floor(
+          Math.random() * letters.length
+        );
+
+      currentLetter =
+        letters[randomIndex];
+
+      const element =
+        document.createElement("div");
+
+      element.className = "letter";
+
+      element.textContent =
+        currentLetter;
+
+      const maxLeft =
+        Math.max(
+          0,
+          gameArea.clientWidth - 60
+        );
+
+      const randomLeft =
+        Math.floor(
+          Math.random() * (maxLeft + 1)
+        );
+
+      element.style.left =
+        randomLeft + "px";
+
+      element.style.top =
+        "-60px";
+
+      gameArea.appendChild(element);
+
+      currentElement = element;
+
+      fallDuration =
+        Number(speedSlider.value) * 1000;
+
+      startTime =
+        performance.now();
+
+      pausedElapsed = 0;
+
+      animateLetter();
+
+    }
+
+
+    // =========================
+    // 字母掉落動畫
+    // =========================
+
+    function animateLetter() {
+
+      if (!gameRunning) {
+        return;
+      }
+
+      if (paused) {
+        return;
+      }
+
+      const now =
+        performance.now();
+
+      const elapsed =
+        now - startTime;
+
+      let progress =
+        elapsed / fallDuration;
+
+
+      // =========================
+      // 加速模式
+      // =========================
+
+      if (acceleration.checked) {
+
+        // 讓後半段速度逐漸加快
+        progress =
+          Math.pow(progress, 0.7);
+
+      }
+
+
+      progress =
+        Math.min(1, progress);
+
+
+      const startY = -60;
+
+      const endY =
+        gameArea.clientHeight;
+
+      const currentY =
+        startY +
+        (endY - startY) * progress;
+
+
+      if (currentElement) {
+
+        currentElement.style.top =
+          currentY + "px";
+
+      }
+
+
+      // =========================
+      // 掉到底部
+      // =========================
+
+      if (progress >= 1) {
+
+        miss++;
+
+        updateDisplay();
+
+        messageElement.textContent =
+          "Miss！字母掉到底部了。";
+
+        currentLetter = null;
+
+        if (currentElement) {
+          currentElement.remove();
+          currentElement = null;
+        }
+
+        nextQuestion();
+
+        return;
+      }
+
+
+      animationFrame =
+        requestAnimationFrame(
+          animateLetter
+        );
+
+    }
+
+
+    // =========================
+    // 鍵盤輸入
+    // =========================
+
+    document.addEventListener(
+      "keydown",
+      function (event) {
+
+        if (!gameRunning) {
+          return;
+        }
+
+        if (paused) {
+          return;
+        }
+
+        // 防止長按造成連續判定
+        if (event.repeat) {
+          return;
+        }
+
+        const key =
+          event.key.toUpperCase();
+
+
+        // 不是十個指定按鍵
+        if (!letters.includes(key)) {
+          return;
+        }
+
+
+        // 目前沒有字母
+        if (!currentLetter) {
+          return;
+        }
+
+
+        // =========================
+        // 答對
+        // =========================
+
+        if (key === currentLetter) {
+
+          score++;
+
+          updateDisplay();
+
+          messageElement.textContent =
+            "答對！";
+
+          cancelAnimationFrame(
+            animationFrame
+          );
+
+          if (currentElement) {
+            currentElement.remove();
+            currentElement = null;
+          }
+
+          currentLetter = null;
+
+          nextQuestion();
+
+        }
+
+
+        // =========================
+        // 答錯
+        // =========================
+
+        else {
+
+          messageElement.textContent =
+            "答錯了，再試試看！";
+
+        }
+
+      }
+    );
+
+
+    // =========================
+    // 暫停
+    // =========================
+
+    function pauseGame() {
+
+      if (!gameRunning || paused) {
+        return;
+      }
+
+      paused = true;
+
+      pausedElapsed =
+        performance.now() - startTime;
+
+      cancelAnimationFrame(
+        animationFrame
+      );
+
+      pauseButton.textContent =
+        "繼續";
+
+      messageElement.textContent =
+        "遊戲已暫停";
+
+    }
+
+
+    // =========================
+    // 繼續
+    // =========================
+
+    function resumeGame() {
+
+      if (!gameRunning || !paused) {
+        return;
+      }
+
+      paused = false;
+
+      startTime =
+        performance.now() -
+        pausedElapsed;
+
+      pauseButton.textContent =
+        "暫停";
+
+      messageElement.textContent =
+        "繼續遊戲！";
+
+      animateLetter();
+
+    }
+
+
+    // =========================
+    // 更新畫面數字
+    // =========================
+
+    function updateDisplay() {
+
+      questionElement.textContent =
+        currentQuestion;
+
+      scoreElement.textContent =
+        score;
+
+      missElement.textContent =
+        miss;
+
+    }
+
+
+    // =========================
+    // 遊戲結束
+    // =========================
+
+    function endGame() {
+
+      gameRunning = false;
+      paused = false;
+
+      cancelAnimationFrame(
+        animationFrame
+      );
+
+      currentLetter = null;
+
+      if (currentElement) {
+        currentElement.remove();
+        currentElement = null;
+      }
+
+      startButton.disabled = false;
+      pauseButton.disabled = true;
+
+      pauseButton.textContent =
+        "暫停";
+
+      messageElement.textContent =
+        "遊戲結束！你的分數是 " +
+        score +
+        " 分，Miss " +
+        miss +
+        " 次。";
+
+    }
+
+
+    // =========================
+    // 瀏覽器分頁離開
+    // 自動暫停
+    // =========================
+
+    document.addEventListener(
+      "visibilitychange",
+      function () {
+
+        if (
+          document.hidden &&
+          gameRunning &&
+          !paused
+        ) {
+
+          pauseGame();
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
