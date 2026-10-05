@@ -1,97 +1,507 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>英打遊戲版本歷史</title>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
 
-    body {
-      margin: 0;
-      font-family: Arial, "Noto Sans TC", sans-serif;
-      background: #f5f5f5;
-      color: #222;
+    :root {
+
+      --bg: #030914;
+
+      --blue-dark: #061426;
+
+      --blue: #0b2944;
+
+      --border: #29465e;
+
+      --text: #dce7f0;
+
+      --muted: #7b91a4;
+
+      --light: #a9bfd0;
+
     }
 
+    body {
+
+      margin: 0;
+
+      min-height: 100vh;
+
+      font-family:
+        Arial,
+        "Noto Sans TC",
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+
+        radial-gradient(
+          circle at 15% 15%,
+          rgba(38, 91, 126, 0.22),
+          transparent 30%
+        ),
+
+        radial-gradient(
+          circle at 85% 80%,
+          rgba(35, 70, 110, 0.20),
+          transparent 32%
+        ),
+
+        linear-gradient(
+          135deg,
+          #020711 0%,
+          #06182a 48%,
+          #030914 100%
+        );
+
+      overflow-x: hidden;
+    }
+
+    /* 星空 */
+
+    body::before {
+
+      content: "";
+
+      position: fixed;
+
+      inset: 0;
+
+      pointer-events: none;
+
+      opacity: 0.38;
+
+      background-image:
+
+        radial-gradient(
+          circle,
+          rgba(205, 220, 230, 0.55) 1px,
+          transparent 1px
+        ),
+
+        radial-gradient(
+          circle,
+          rgba(120, 160, 190, 0.35) 1px,
+          transparent 1px
+        );
+
+      background-size:
+        100px 100px,
+        160px 160px;
+
+      background-position:
+        20px 25px,
+        65px 80px;
+    }
+
+    /* ======================
+       Header
+    ====================== */
+
     header {
+
+      position: relative;
+
+      z-index: 1;
+
       text-align: center;
-      padding: 60px 20px 40px;
+
+      padding:
+        75px
+        20px
+        48px;
+    }
+
+    .eyebrow {
+
+      color: #5e778c;
+
+      font-size: 11px;
+
+      letter-spacing: 5px;
+
+      margin-bottom: 15px;
     }
 
     header h1 {
-      margin-bottom: 12px;
+
+      margin: 0;
+
+      font-size:
+        clamp(
+          36px,
+          6vw,
+          60px
+        );
+
+      letter-spacing: 5px;
+
+      color: #dce7f0;
+
+      text-shadow:
+        0 0 20px
+        rgba(
+          120,
+          160,
+          185,
+          0.15
+        );
     }
 
     header p {
-      color: #666;
+
+      margin:
+        16px
+        0
+        0;
+
+      color: #71879a;
+
+      font-size: 14px;
+
+      letter-spacing: 1px;
     }
+
+    /* ======================
+       Container
+    ====================== */
 
     .container {
-      width: min(1100px, 90%);
-      margin: 0 auto 60px;
+
+      position: relative;
+
+      z-index: 1;
+
+      width:
+        min(
+          1100px,
+          90%
+        );
+
+      margin:
+        0
+        auto
+        70px;
     }
 
+    /* ======================
+       Cards
+    ====================== */
+
     .cards {
+
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+
+      grid-template-columns:
+        repeat(
+          2,
+          1fr
+        );
+
+      gap: 20px;
     }
 
     .card {
+
+      position: relative;
+
       display: block;
-      padding: 30px;
-      background: white;
+
+      min-height: 250px;
+
+      padding: 32px;
+
+      background:
+
+        linear-gradient(
+          145deg,
+          rgba(
+            11,
+            43,
+            68,
+            0.94
+          ),
+
+          rgba(
+            5,
+            22,
+            38,
+            0.96
+          )
+        );
+
+      border:
+        1px solid
+        rgba(
+          90,
+          130,
+          155,
+          0.38
+        );
+
       border-radius: 16px;
+
       text-decoration: none;
+
       color: inherit;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      transition: transform 0.2s, box-shadow 0.2s;
+
+      box-shadow:
+
+        0 15px 40px
+        rgba(
+          0,
+          0,
+          0,
+          0.28
+        ),
+
+        inset
+        0 1px 0
+        rgba(
+          190,
+          215,
+          230,
+          0.05
+        );
+
+      overflow: hidden;
+
+      transition:
+        transform 0.25s,
+        border-color 0.25s,
+        box-shadow 0.25s;
+    }
+
+    /* 卡片左側細線 */
+
+    .card::before {
+
+      content: "";
+
+      position: absolute;
+
+      left: 0;
+
+      top: 0;
+
+      width: 3px;
+
+      height: 100%;
+
+      background:
+
+        linear-gradient(
+          to bottom,
+          transparent,
+          #557d98,
+          transparent
+        );
+
+      opacity: 0.65;
+    }
+
+    /* 卡片上方淡光 */
+
+    .card::after {
+
+      content: "";
+
+      position: absolute;
+
+      width: 180px;
+
+      height: 180px;
+
+      right: -100px;
+
+      top: -100px;
+
+      border-radius: 50%;
+
+      background:
+        rgba(
+          100,
+          150,
+          180,
+          0.07
+        );
+
+      filter: blur(15px);
+
+      pointer-events: none;
     }
 
     .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+
+      transform:
+        translateY(-6px);
+
+      border-color:
+        rgba(
+          120,
+          165,
+          190,
+          0.68
+        );
+
+      box-shadow:
+
+        0 20px 50px
+        rgba(
+          0,
+          0,
+          0,
+          0.38
+        ),
+
+        0 0 25px
+        rgba(
+          65,
+          110,
+          140,
+          0.12
+        );
     }
 
+    /* ======================
+       Card Text
+    ====================== */
+
     .version {
-      color: #777;
-      font-size: 14px;
-      margin-bottom: 12px;
+
+      color: #7595aa;
+
+      font-size: 11px;
+
+      letter-spacing: 4px;
+
+      margin-bottom: 15px;
     }
 
     .card h2 {
-      margin: 0 0 12px;
+
+      margin:
+        0
+        0
+        15px;
+
+      color: #dce7f0;
+
+      font-size: 25px;
+
+      letter-spacing: 1px;
     }
 
     .card p {
-      line-height: 1.7;
-      color: #555;
+
+      margin: 0;
+
+      line-height: 1.8;
+
+      color: #8096a8;
+
+      font-size: 14px;
     }
 
     .button {
+
       display: inline-block;
-      margin-top: 10px;
+
+      margin-top: 24px;
+
+      color: #9bb5c6;
+
+      font-size: 13px;
+
       font-weight: bold;
+
+      letter-spacing: 0.5px;
+
+      transition:
+        color 0.2s;
     }
 
+    .card:hover .button {
+
+      color: #c0d1dc;
+    }
+
+    /* ======================
+       Footer
+    ====================== */
+
+    .footer {
+
+      text-align: center;
+
+      margin-top: 45px;
+
+      color: #4f6578;
+
+      font-size: 11px;
+
+      letter-spacing: 2px;
+    }
+
+    /* ======================
+       Mobile
+    ====================== */
+
     @media (max-width: 800px) {
+
+      header {
+
+        padding-top: 50px;
+
+      }
+
       .cards {
-        grid-template-columns: 1fr;
+
+        grid-template-columns:
+          1fr;
+      }
+
+      .card {
+
+        min-height: auto;
       }
     }
+
   </style>
+
 </head>
 
 <body>
 
   <header>
-    <h1>英打遊戲版本歷史</h1>
-    <p>記錄英打遊戲從第一版到後續版本的開發過程。</p>
+
+    <div class="eyebrow">
+      TYPING GAME / DEVELOPMENT HISTORY
+    </div>
+
+    <h1>
+      英打遊戲版本歷史
+    </h1>
+
+    <p>
+      從基礎介面到完整英打遊戲的開發紀錄
+    </p>
+
   </header>
 
   <main class="container">
@@ -99,57 +509,118 @@
     <div class="cards">
 
       <!-- Version 1 -->
+
       <a
         class="card"
         href="https://241666.github.io/typing-v1/"
         target="_blank"
       >
-        <div class="version">VERSION 1</div>
-        <h2>英打遊戲版本一</h2>
+
+        <div class="version">
+          VERSION 01
+        </div>
+
+        <h2>
+          英打遊戲版本一
+        </h2>
+
         <p>
-          第一個版本，建立英打遊戲的基本頁面與開始按鈕。
+          第一個版本，建立英打遊戲的基本頁面，
+          並加入開始按鈕。
         </p>
-        <span class="button">查看 Version 1 →</span>
+
+        <span class="button">
+          查看 Version 1 →
+        </span>
+
       </a>
 
+
       <!-- Version 2 -->
+
       <a
         class="card"
         href="https://241666.github.io/typing-v2/"
         target="_blank"
       >
-        <div class="version">VERSION 2</div>
-        <h2>英打遊戲版本二</h2>
+
+        <div class="version">
+          VERSION 02
+        </div>
+
+        <h2>
+          英打遊戲版本二
+        </h2>
+
         <p>
-          加入鍵盤圖片與開始後播放的音效。
+          加入鍵盤圖片與音效，
+          開始遊戲後會播放提示聲音。
         </p>
-        <span class="button">查看 Version 2 →</span>
+
+        <span class="button">
+          查看 Version 2 →
+        </span>
+
       </a>
 
+
       <!-- Version 3 -->
+
       <a
         class="card"
-        href="coming-soon.html"
+        href="v3/index.html"
       >
-        <div class="version">VERSION 3</div>
-        <h2>Coming Soon</h2>
+
+        <div class="version">
+          VERSION 03
+        </div>
+
+        <h2>
+          英打遊戲版本三
+        </h2>
+
         <p>
-          下一個版本正在製作中，敬請期待。
+          加入 A、S、D、F 英打遊戲，
+          開始進行真正的鍵盤輸入挑戰。
         </p>
-        <span class="button">即將推出 →</span>
+
+        <span class="button">
+          開始 Version 3 →
+        </span>
+
       </a>
+
+
       <!-- Version 4 -->
+
       <a
         class="card"
         href="v4/index.html"
       >
-        <div class="version">VERSION 4</div>
-        <h2>英打遊戲版本四</h2>
+
+        <div class="version">
+          VERSION 04
+        </div>
+
+        <h2>
+          英打遊戲版本四
+        </h2>
+
         <p>
-          加入十鍵落下式英打遊戲，挑戰快速輸入字母並累積分數。
+          十鍵落下式英打遊戲，
+          字母如流星般落下並挑戰你的反應速度。
         </p>
-        <span class="button">開始 Version 4 →</span>
+
+        <span class="button">
+          開始 Version 4 →
+        </span>
+
       </a>
+
+    </div>
+
+    <div class="footer">
+      SPACE TYPING PROJECT
     </div>
 
   </main>
